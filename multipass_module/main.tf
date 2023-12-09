@@ -8,10 +8,13 @@ resource "multipass_instance" "multipass_vm" {
   image  = var.image_name
 
   connection {
-    type     = "ssh"
-    host     = var.host
-    user     = var.user
-    password = var.password
-    private_key = var.private_key
+    type        = "ssh"
+    user        = var.username
+    host        = var.hostname
+    private_key = "${file(var.private_key)}"
+  }
+
+  provisioner "remote-exec" {
+    inline = ["echo 'Hello, World!'"]
   }
 }

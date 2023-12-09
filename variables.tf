@@ -3,9 +3,8 @@ locals {
   dot_env_file_path = "./.env"
   dot_env_regex     = "(?m:^\\s*([^#\\s]\\S*)\\s*=\\s*[\"']?(.*[^\"'\\s])[\"']?\\s*$)"
   dot_env           = { for tuple in regexall(local.dot_env_regex, file(local.dot_env_file_path)) : tuple[0] => sensitive(tuple[1]) }
-  user              = local.dot_env["USER_NAME"]
-  password          = local.dot_env["USER_PASS"]
-  host              = local.dot_env["HOST"]
+  username          = local.dot_env["USER_NAME"]
+  hostname          = local.dot_env["HOST_NAME"]
   private_key       = local.dot_env["PRIV_KEY"]
 }
 
@@ -19,6 +18,24 @@ variable "name" {
   description = "Name of the VM your creating"
   type        = string
   default     = "testvm"
+}
+
+variable "username" {
+  description = "username of the VM your creating"
+  type        = string
+  default     = "default_username"
+}
+
+variable "hostname" {
+  description = "hostname of the VM your creating"
+  type        = string
+  default     = "default_hostname"
+}
+
+variable "private_key" {
+  description = "private_key of the VM your creating"
+  type        = string
+  default     = "default_private_key"
 }
 
 variable "name_prefix" {
