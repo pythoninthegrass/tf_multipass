@@ -3,7 +3,7 @@ module "multipass_vm" {
 
   instance_count = var.instance_count
   user_data      = "${path.module}/cloud-init.yml"
-  name_prefix     = "tf"
+  name_prefix     = var.name_prefix
   name           = var.name
   image_name     = var.image_name
   cpus           = var.cpus

@@ -41,7 +41,7 @@ variable "private_key" {
 variable "name_prefix" {
   description = "Instance name prefix"
   type        = string
-  default     = "instance"
+  default     = "tf"
 }
 
 variable "image_name" {
