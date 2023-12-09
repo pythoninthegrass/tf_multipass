@@ -4,11 +4,11 @@ Terraform + Multipass = :heart:
 
 ## Quickstart
 ```bash
-terraform fmt
 terraform init
+terraform fmt       # optional
 terraform validate
-terraform plan
-terraform apply
+terraform plan -out tfplan
+terraform apply tfplan
 ```
 
 ## Terraform Module Structure
