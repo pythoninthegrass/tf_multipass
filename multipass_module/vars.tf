@@ -2,17 +2,14 @@ variable "user_data" {
   type    = string
 }
 
-variable "user_name" {
+variable "username" {
   type    = string
+  sensitive = false
 }
 
-variable "user_password" {
+variable "hostname" {
   type    = string
-  sensitive = true
-}
-
-variable "host" {
-  type    = string
+  sensitive = false
 }
 
 variable "private_key" {
