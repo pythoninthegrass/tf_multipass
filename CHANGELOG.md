@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/pythoninthegrass/tf_multipass/compare/v1.0.0...v1.0.1) (2023-12-09)
+
+
+### Bug Fixes
+
+* ssh connection ([0dbfade](https://github.com/pythoninthegrass/tf_multipass/commit/0dbfadeea6afda6a7008d7f02faddd42dec99a05))
+
 ## 1.0.0 (2023-12-09)
 
 
