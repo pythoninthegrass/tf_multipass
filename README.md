@@ -1,0 +1,33 @@
+# tf_multipass
+
+Terraform + Multipass = :heart:
+
+## Quickstart
+```bash
+terraform fmt
+terraform init
+terraform validate
+terraform plan
+terraform apply
+```
+
+## Terraform Module Structure
+
+| File/Folder                 | Description                                       |
+|-----------------------------|---------------------------------------------------|
+| main.tf                     | Main calling module                               |
+| multipass_module/           | Main module folder                                |
+| multipass_module/main.tf    | Main Terraform module                             |
+| multipass_module/provider.tf| Link to the provider in the main root folder      |
+| multipass_module/vars.tf    | Variables passed to the main Multipass module     |
+| provider.tf                 | Main provider for Multipass version 1.4.2         |
+| user_data.cfg               | Bootstrap installation of packages, SSH keys, and VM upgrade |
+| variables.tf                | Variables used by the module and default settings |
+
+
+## Further Reading
+[larstobi/terraform-provider-multipass](https://github.com/larstobi/terraform-provider-multipass)
+
+[Terraform Provider for Multipass Hypervisor](https://registry.terraform.io/providers/larstobi/multipass/1.4.2)  
+
+[Multipass](https://multipass.run/)
