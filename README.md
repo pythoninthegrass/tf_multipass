@@ -1,6 +1,6 @@
 # tf_multipass
 
-Terraform + Multipass = :heart:
+[Terraform](https://www.terraform.io/) + [Multipass](https://multipass.run/) = :heart:
 
 ## Quickstart
 ```bash
@@ -21,13 +21,12 @@ terraform apply tfplan
 | multipass_module/provider.tf| Link to the provider in the main root folder      |
 | multipass_module/vars.tf    | Variables passed to the main Multipass module     |
 | provider.tf                 | Main provider for Multipass version 1.4.2         |
-| user_data.cfg               | Bootstrap installation of packages, SSH keys, and VM upgrade |
+| cloud-init.yml              | Bootstrap installation of packages, SSH keys, and VM upgrade |
 | variables.tf                | Variables used by the module and default settings |
+| outputs.tf                  | Output variables from the module                  |
 
 
 ## Further Reading
 [larstobi/terraform-provider-multipass](https://github.com/larstobi/terraform-provider-multipass)
 
 [Terraform Provider for Multipass Hypervisor](https://registry.terraform.io/providers/larstobi/multipass/1.4.2)  
-
-[Multipass](https://multipass.run/)
