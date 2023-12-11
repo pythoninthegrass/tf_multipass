@@ -25,6 +25,19 @@ terraform apply tfplan
 | variables.tf                | Variables used by the module and default settings |
 | outputs.tf                  | Output variables from the module                  |
 
+## Development
+* Auto changelog via conventional commits: [Commitizen](https://commitizen-tools.github.io/commitizen/)
+```bash
+# install commitizen
+npm install -g commitizen
+npm install
+
+# commit changes
+git add .
+
+# use commitizen to commit changes
+git cz
+```
 
 ## Further Reading
 [larstobi/terraform-provider-multipass](https://github.com/larstobi/terraform-provider-multipass)
