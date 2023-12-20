@@ -29,8 +29,9 @@ terraform apply tfplan
 * Auto changelog via conventional commits: [Commitizen](https://commitizen-tools.github.io/commitizen/)
 ```bash
 # install commitizen
-npm install -g commitizen
+npm install -g commitizen       # npm
 npm install
+brew install commitizen         # brew
 
 # commit changes
 git add .
