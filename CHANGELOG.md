@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0](https://github.com/pythoninthegrass/tf_multipass/compare/v2.0.0...v1.0.0) (2023-12-20)
+
+
+### Miscellaneous Chores
+
+* release 1.0.0 ([805f573](https://github.com/pythoninthegrass/tf_multipass/commit/805f573e686761f5992119308b2fca6259ca030e))
+
 ## [2.0.0](https://github.com/pythoninthegrass/tf_multipass/compare/v1.0.1...v2.0.0) (2023-12-20)
 
 
