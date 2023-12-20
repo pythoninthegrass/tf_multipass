@@ -23,7 +23,9 @@ on:
   status: {}
 
 env:
-  MERGE_LABELS: "automerge,autorelease: pending"
+  MERGE_LABELS: ""
+  MERGE_REQUIRED_APPROVALS: 0
+  UPDATE_LABELS: "automerge"
 
 jobs:
   automerge:
