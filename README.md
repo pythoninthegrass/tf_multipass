@@ -26,7 +26,7 @@ terraform apply tfplan
 | outputs.tf                  | Output variables from the module                             |
 
 ## Development
-* Auto changelog via conventional commits: [Commitizen](https://commitizen-tools.github.io/commitizen/)
+* Auto changelog via conventional commits: [Commitizen](https://github.com/commitizen/cz-cli)
 ```bash
 # install commitizen
 npm install -g commitizen       # npm
