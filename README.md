@@ -44,3 +44,5 @@ git cz
 [larstobi/terraform-provider-multipass](https://github.com/larstobi/terraform-provider-multipass)
 
 [Terraform Provider for Multipass Hypervisor](https://registry.terraform.io/providers/larstobi/multipass/1.4.2)  
+
+[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
