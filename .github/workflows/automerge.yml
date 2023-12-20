@@ -23,7 +23,9 @@ on:
   status: {}
 
 env:
-  MERGE_LABELS: "automerge,autorelease: pending"
+  MERGE_LABELS: ""
+  MERGE_REQUIRED_APPROVALS: 0
+  UPDATE_LABELS: "automerge"
 
 jobs:
   automerge:
@@ -36,7 +38,3 @@ jobs:
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: feedback
-        if: steps.automerge.outputs.mergeResult == "merged"
-        run: |
-          echo "Pull request ${{ steps.automerge.outputs.pullRequestNumber }} merged!"
