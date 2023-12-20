@@ -23,8 +23,14 @@ on:
   status: {}
 
 env:
+  # required labels for pull request to be merged
   MERGE_LABELS: ""
+
+  # count of required approvals
   MERGE_REQUIRED_APPROVALS: 0
+
+  # labels that need to be present for a pull request to be updated
+  # * updating will only happen when the option "Require branches to be up to date before merging" is enabled in the branch protection rules
   UPDATE_LABELS: "automerge"
 
 jobs:
