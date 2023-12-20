@@ -46,3 +46,5 @@ git cz
 [Terraform Provider for Multipass Hypervisor](https://registry.terraform.io/providers/larstobi/multipass/1.4.2)  
 
 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+
+[googleapis/release-please: generate release PRs based on the conventionalcommits.org spec](https://github.com/googleapis/release-please)
