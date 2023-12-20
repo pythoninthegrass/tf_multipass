@@ -31,7 +31,7 @@ env:
 
   # labels that need to be present for a pull request to be updated
   # * updating will only happen when the option "Require branches to be up to date before merging" is enabled in the branch protection rules
-  UPDATE_LABELS: "automerge"
+  UPDATE_LABELS: ""
 
 jobs:
   automerge:
@@ -43,3 +43,8 @@ jobs:
         uses: "pascalgn/automerge-action@v0.15.6"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: feedback
+        if: steps.automerge.outputs.mergeResult == "merged"
+        run: |
+          echo "Pull request ${{ steps.automerge.outputs.pullRequestNumber }} merged!"
