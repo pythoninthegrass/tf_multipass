@@ -30,7 +30,7 @@ terraform apply tfplan
 ```bash
 # install commitizen
 npm install -g commitizen       # npm
-npm install
+npm install                     # npm
 brew install commitizen         # brew
 
 # commit changes
