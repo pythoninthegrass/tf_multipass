@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.0.1](https://github.com/pythoninthegrass/tf_multipass/compare/v1.0.0...v1.0.1) (2023-12-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **readme.md:** Buried in the backyard. Thoroughly.
+* **readme.md:** Buried
+
+### Features
+
+* **readme.md:** update README. ([a6f8ad2](https://github.com/pythoninthegrass/tf_multipass/commit/a6f8ad2704b564cf3d15c75d42a3a02026ff0b5c))
+* **readme.md:** update README.md ([60099f9](https://github.com/pythoninthegrass/tf_multipass/commit/60099f937aab3fc030e2361c5009e18471392979))
+* **readme.md:** update README.md ([692c3f2](https://github.com/pythoninthegrass/tf_multipass/commit/692c3f25dbf29d1de1b9b5391d73fbeee8b5c110))
+
+
+### Bug Fixes
+
+* fix terraform init ([09bf094](https://github.com/pythoninthegrass/tf_multipass/commit/09bf094a9eb6370d011d4ad6aac851122ad6b3e6))
+* ssh connection ([0dbfade](https://github.com/pythoninthegrass/tf_multipass/commit/0dbfadeea6afda6a7008d7f02faddd42dec99a05))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0 ([805f573](https://github.com/pythoninthegrass/tf_multipass/commit/805f573e686761f5992119308b2fca6259ca030e))
+* release 1.0.1 ([186f4db](https://github.com/pythoninthegrass/tf_multipass/commit/186f4db03b891452d2feaea9cfcf5511c09384e1))
+* release 1.0.1 ([ed08d20](https://github.com/pythoninthegrass/tf_multipass/commit/ed08d20ab8ed7366c38c1f64b2e449cab9fadee2))
+
 ## [1.0.0](https://github.com/pythoninthegrass/tf_multipass/compare/v2.0.0...v1.0.0) (2023-12-20)
 
 
