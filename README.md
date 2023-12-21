@@ -29,9 +29,10 @@ terraform apply tfplan
 * Auto changelog via conventional commits: [Commitizen](https://github.com/commitizen/cz-cli)
 ```bash
 # install commitizen
-npm install -g commitizen       # npm
-npm install                     # npm
-brew install commitizen         # brew
+npm install -g commitizen
+
+# make repo commitizen friendly (i.e., add to package.json)
+commitizen init cz-conventional-changelog --save-dev --save-exact
 
 # commit changes
 git add .
