@@ -1,5 +1,5 @@
 pull_request_rules:
-  - name: "Automatic merge when CI passes and approved"
+  - name: automatic merge when CI passes and approved
     conditions:
       - "base=main"
       - "author=github-actions[bot]"
