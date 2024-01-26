@@ -18,3 +18,4 @@ pull_request_rules:
       - label="keep-up-to-date"
     actions:
       update:
+      
