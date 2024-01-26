@@ -20,7 +20,7 @@ on:
     types:
       - completed
 
-  status: {}
+  status:
 
 env:
   # required labels for pull request to be merged
