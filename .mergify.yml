@@ -1,0 +1,20 @@
+pull_request_rules:
+  - name: "Automatic merge when CI passes and approved"
+    conditions:
+      - "base=main"
+      - "author=github-actions[bot]"
+    actions:
+      merge:
+      delete_head_branch:
+        force: true
+  - name: automatic squash of pull requests
+    conditions:
+      - label=to-squash
+    actions:
+      squash:
+  - name: automatic update for PR marked as “keep-up-to-date“
+    conditions:
+      - -draft # filter-out draft PRs
+      - label="keep-up-to-date"
+    actions:
+      update:
