@@ -17,7 +17,6 @@ packages:
   - ansible-lint
   - curl
   - git
-  - gnupg-agent
 
 users:
   - name: ansible
@@ -156,7 +155,7 @@ write_files:
       remote_tmp              = /tmp/${USER}/ansible
       gathering               = smart
       fact_caching            = redis
-      fact_caching_prefix      = ansible_facts_
+      fact_caching_prefix     = ansible_facts_
       fact_caching_timeout    = 60
       fact_caching_connection = localhost:6379:0
 
