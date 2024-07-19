@@ -2,8 +2,8 @@ output "instance_count" {
   value = "${var.instance_count}"
 }
 
-output "name" {
-  value = "${var.name}"
+output "vm_names" {
+  value = module.multipass_vm.multipass_instance.multipass_vm[*].name
 }
 
 output "image_name" {
@@ -30,7 +30,7 @@ output "hostname" {
   value = nonsensitive("${local.hostname}")
 }
 
-# Only displas file path, not contents
+# Only displays file path, not contents
 output "private_key" {
   value = nonsensitive("${local.private_key}")
 }

@@ -1,0 +1,6 @@
+# code: language=ansible
+
+---
+tld: "{{ playbook_dir | dirname }}"
+local_user: "{{ ansible_user }}"
+limit_hosts: "10.13.37.37"

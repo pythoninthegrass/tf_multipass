@@ -1,0 +1,322 @@
+# code: language=ansible
+
+---
+- hosts: "{{ target_hosts | default('all') }}"
+  become: false
+  gather_facts: true
+  any_errors_fatal: true
+  vars:
+    target_hosts: >-
+      {{
+        limit_hosts | default(groups['all'])
+        if limit_hosts is defined and limit_hosts in groups
+        else 'all'
+      }}
+  vars_files:
+    - "../vars/all.yml"
+    - "../vault.yml"
+  environment:
+    EDITOR: vim
+    PATH: "{{ ansible_env.HOME }}/.asdf/shims:{{ ansible_env.HOME }}/.asdf/bin:{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.PATH }}"
+  roles:
+    - role: asdf
+      vars:
+        asdf_user: "{{ local_user }}"
+        asdf_group: "{{ local_user }}"
+        asdf_dir: "{{ ansible_user_dir }}/.asdf"
+        asdf_version: "v0.14.0"
+        asdf_plugins:
+          - name: helm
+            repository: "https://github.com/Antiarchitect/asdf-helm.git"
+            versions: ["latest"]
+            global: "latest"
+          - name: kubectl
+            versions: ["latest"]
+            global: "latest"
+          - name: python
+            versions: ["3.11.9"]
+            global: "3.11.9"
+      tags: pre
+  pre_tasks:
+    - name: Ensure the system is Debian-based
+      ansible.builtin.fail:
+        msg: "This playbook is only supported on Debian-based systems. Detected OS family: {{ ansible_os_family }}"
+      when: ansible_os_family != "Debian"
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+      become: true
+
+    - name: Install dependencies
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - bridge-utils
+          - ca-certificates
+          - iptables-persistent
+          - libvirt-clients
+          - libvirt-daemon-system
+          - netfilter-persistent
+          - qemu-kvm
+        state: present
+      become: true
+
+    - name: Install multipass
+      community.general.snap:
+        name: multipass
+        state: present
+      become: true
+
+    - name: Add local user to libvirt and kvm groups
+      ansible.builtin.user:
+        name: "{{ local_user }}"
+        groups: "{{ item }}"
+        append: yes
+      with_items:
+        - libvirt
+        - kvm
+      become: true
+
+    - name: Check if setup flag exists
+      ansible.builtin.stat:
+        path: "/var/snap/multipass/common/data/multipassd/.setup_complete_flag"
+      become: true
+      register: setup_flag
+      tags: qa
+
+    - name: Multipass setup and configuration
+      block:
+        - name: Remove existing client certificates
+          ansible.builtin.file:
+            path: "/var/snap/multipass/common/data/multipassd/authenticated-certs/multipass_client_certs.pem"
+            state: absent
+          become: true
+
+        - name: Copy new client certificate
+          ansible.builtin.copy:
+            src: "{{ ansible_env.HOME }}/snap/multipass/current/data/multipass-client-certificate/multipass_cert.pem"
+            dest: /var/snap/multipass/common/data/multipassd/authenticated-certs/multipass_client_certs.pem
+            force: false
+            remote_src: true
+          become: true
+
+        - name: Connect multipass to libvirt
+          ansible.builtin.command:
+            snap connect multipass:libvirt
+          ignore_errors: true
+          become: true
+
+        - name: Ensure override directory exists
+          ansible.builtin.file:
+            path: "/etc/systemd/system/snap.multipass.multipassd.service.d"
+            state: directory
+            mode: '0755'
+          become: true
+
+        - name: Configure multipass override
+          ansible.builtin.lineinfile:
+            path: "/etc/systemd/system/snap.multipass.multipassd.service.d/override.conf"
+            line: "ExecStart=/usr/bin/snap run multipass.multipassd --address {{ ansible_host }}:51005"
+            create: yes
+            mode: '0644'
+            insertafter: '[Service]'
+            regexp: '^ExecStart='
+          become: true
+
+        - name: Ensure ExecStart is reset in override file
+          ansible.builtin.lineinfile:
+            path: "/etc/systemd/system/snap.multipass.multipassd.service.d/override.conf"
+            line: "ExecStart="
+            insertbefore: '^ExecStart=/usr/bin/snap'
+          become: true
+
+        - name: Ensure [Service] section exists in override file
+          ansible.builtin.lineinfile:
+            path: "/etc/systemd/system/snap.multipass.multipassd.service.d/override.conf"
+            line: "[Service]"
+            insertbefore: BOF
+          become: true
+
+        - name: Open firewall for multipass (iptables)
+          ansible.builtin.iptables:
+            chain: INPUT
+            protocol: tcp
+            destination_port: 51001
+            source: 10.212.134.0/24
+            jump: ACCEPT
+            comment: Allow Multipass connections
+          become: true
+
+        - name: Save iptables rules
+          ansible.builtin.command:
+            netfilter-persistent save
+          become: true
+
+        - name: Reload iptables rules
+          ansible.builtin.command:
+            netfilter-persistent reload
+          become: true
+
+        - name: Ensure netfilter-persistent service is enabled
+          ansible.builtin.systemd:
+            name: netfilter-persistent
+            enabled: yes
+            state: started
+          become: true
+
+        - name: Check if main Multipass AppArmor profile exists
+          ansible.builtin.stat:
+            path: /etc/apparmor.d/snap.multipass.multipassd
+          register: main_profile
+          tags: qa
+
+        - name: Append local rules to main Multipass AppArmor profile
+          ansible.builtin.blockinfile:
+            path: /etc/apparmor.d/snap.multipass.multipassd
+            block: |
+              # Local additions
+              ptrace (read) peer=libvirtd,
+              /usr/lib64/ r,
+              /usr/lib64/** r,
+            marker: "# {mark} ANSIBLE MANAGED BLOCK"
+          become: true
+          when: main_profile.stat.exists
+          tags: qa
+
+        - name: Create local AppArmor rules for Multipass
+          ansible.builtin.copy:
+            dest: /etc/apparmor.d/local/snap.multipass.multipassd
+            content: |
+              # Site-specific additions and overrides for snap.multipass.multipassd.
+              # For more details, please see /etc/apparmor.d/local/README.
+
+              include <tunables/global>
+
+              profile snap.multipass.multipassd flags=(attach_disconnected,mediate_deleted) {
+                #include <abstractions/base>
+                #include <abstractions/nameservice>
+
+                # Additional permissions
+                ptrace (read) peer=libvirtd,
+                /usr/lib64/ r,
+                /usr/lib64/** r,
+
+                # Allow access to snap-specific directories
+                /var/snap/multipass/** rwk,
+                /snap/multipass/** r,
+
+                # Allow network access
+                network,
+
+                # Allow executing multipass binaries
+                /snap/multipass/*/bin/* ix,
+
+                # Allow access to necessary system files and directories
+                /etc/passwd r,
+                /etc/group r,
+                /etc/nsswitch.conf r,
+                /etc/resolv.conf r,
+                /proc/sys/kernel/hostname r,
+                /run/systemd/resolve/stub-resolv.conf r,
+
+                # Allow access to libvirt
+                /run/libvirt/** rw,
+                /var/run/libvirt/** rw,
+
+                # Allow access to KVM
+                /dev/kvm rw,
+              }
+            mode: '0644'
+          become: true
+          when: not main_profile.stat.exists
+          tags: qa
+
+        - name: Reload AppArmor profile for Multipass
+          ansible.builtin.command: >
+            apparmor_parser -r "{{ '/etc/apparmor.d/snap.multipass.multipassd'
+            if main_profile.stat.exists
+            else '/etc/apparmor.d/local/snap.multipass.multipassd' }}"
+          become: true
+          tags: qa
+
+        - name: Check AppArmor status
+          ansible.builtin.command: aa-status
+          register: aa_status
+          changed_when: false
+          become: true
+          tags: qa
+
+        - name: Display AppArmor status
+          ansible.builtin.debug:
+            var: aa_status.stdout_lines
+          tags: qa
+
+        - name: Restart Multipass service
+          ansible.builtin.systemd:
+            name: snap.multipass.multipassd.service
+            state: restarted
+          become: true
+          tags: qa
+
+        - name: Set multipass passphrase
+          ansible.builtin.command:
+            multipass set local.passphrase="{{ multipass_passphrase }}"
+          # no_log: true
+          become_user: "{{ local_user }}"
+
+        - name: Authenticate with multipass
+          ansible.builtin.command:
+            multipass authenticate "{{ multipass_passphrase }}"
+          register: auth_result
+          changed_when: auth_result.rc == 0
+          failed_when: auth_result.rc != 0
+          # no_log: true
+          become_user: "{{ local_user }}"
+
+        - name: Get multipass driver
+          ansible.builtin.command:
+            multipass get local.driver
+          become_user: "{{ local_user }}"
+          register: multipass_driver
+
+        - name: Set multipass driver
+          ansible.builtin.command:
+            multipass set local.driver=libvirt
+          become_user: "{{ local_user }}"
+          when: multipass_driver.stdout != "libvirt"
+
+        - name: Stop multipass snap
+          ansible.builtin.command:
+            snap stop multipass
+          become: true
+
+        - name: Kill multipass GUI process
+          ansible.builtin.command:
+            killall multipass.gui
+          ignore_errors: true
+          become: true
+
+        - name: Restart Multipass service
+          ansible.builtin.systemd:
+            name: snap.multipass.multipassd.service
+            state: restarted
+          become: true
+          tags: qa
+
+        - name: Start multipass snap
+          ansible.builtin.command:
+            snap start multipass
+          become: true
+          tags: qa
+
+        - name: Create setup flag
+          ansible.builtin.file:
+            path: "/var/snap/multipass/common/data/multipassd/.setup_complete_flag"
+            state: touch
+            mode: '0644'
+          become: true
+          tags: qa
+
+      when: not setup_flag.stat.exists
+      # tags: qa

@@ -15,25 +15,25 @@ variable "user_data" {
 }
 
 variable "name" {
-  description = "Name of the VM your creating"
+  description = "Name"
   type        = string
   default     = "testvm"
 }
 
 variable "username" {
-  description = "username of the VM your creating"
+  description = "username"
   type        = string
   default     = "default_username"
 }
 
 variable "hostname" {
-  description = "hostname of the VM your creating"
+  description = "hostname"
   type        = string
   default     = "default_hostname"
 }
 
 variable "private_key" {
-  description = "private_key of the VM your creating"
+  description = "private_key"
   type        = string
   default     = "default_private_key"
 }
@@ -57,15 +57,15 @@ variable "cpus" {
 }
 
 variable "memory" {
-  description = "virtual Vm memory allocation"
+  description = "virtual vm memory allocation"
   type        = string
-  default     = "2G"
+  default     = "1G"
 }
 
 variable "disks" {
   description = "Thin provisioned disk size"
   type        = string
-  default     = "10G"
+  default     = "5G"
 }
 
 variable "instance_count" {

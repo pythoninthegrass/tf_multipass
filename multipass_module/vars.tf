@@ -14,7 +14,7 @@ variable "hostname" {
 
 variable "private_key" {
   type    = string
-  sensitive = true
+  sensitive = false
 }
 
 variable "name" {
