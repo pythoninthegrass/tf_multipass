@@ -2,7 +2,21 @@
 
 [Terraform](https://www.terraform.io/) + [Multipass](https://multipass.run/) = :heart:
 
+## Requirements
+
+* [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+* [Terraform](https://www.terraform.io/downloads.html)
+
+## Install
+
+Install Ansible Galaxy roles
+
+```bash
+ansible-galaxy install -r requirements.yml
+```
+
 ## Quickstart
+
 ```bash
 terraform init
 terraform fmt               # optional
@@ -26,6 +40,7 @@ terraform apply tfplan
 | outputs.tf                  | Output variables from the module                             |
 
 ## Development
+
 * Auto changelog via conventional commits: [Commitizen](https://github.com/commitizen/cz-cli)
 ```bash
 # install commitizen
@@ -42,6 +57,7 @@ git cz
 ```
 
 ## Further Reading
+
 [larstobi/terraform-provider-multipass](https://github.com/larstobi/terraform-provider-multipass)
 
 [Terraform Provider for Multipass Hypervisor](https://registry.terraform.io/providers/larstobi/multipass/1.4.2)  
